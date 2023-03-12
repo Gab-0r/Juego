@@ -1,7 +1,7 @@
 #Importar librerías
 import numpy as np
 import cv2
-#import keyboard
+import keyboard
 
 # keyboard.press('a')
 # keyboard.release('a')
@@ -24,8 +24,8 @@ y1 = int(h*0)
 y2 = int(h*1.5)
 
 # Mascara para el color de piel
-lower_hsv = np.array([18, 0, 0])
-higher_hsv = np.array([179, 255, 255])
+lower_hsv = np.array([0, 29, 0])
+higher_hsv = np.array([52, 186, 255])
 
 while True:
     # CAPTURA FOTOGRAMA 1
@@ -65,10 +65,33 @@ while True:
     arriba_mask = cv2.inRange(arriba_hsv, lower_hsv, higher_hsv)
     derecha_mask = cv2.inRange(derecha_hsv, lower_hsv, higher_hsv)
 
-    #Mostrar fragmentos procesados
-    cv2.imshow('Capturando izquierda', izquierda_mask)
-    cv2.imshow('Capturando arriba', arriba_mask)
-    cv2.imshow('Capturando derecha', derecha_mask)
+    #Mostrar fragmentos procesados - Debug Only
+    #cv2.imshow('Capturando izquierda', izquierda_mask)
+    #cv2.imshow('Capturando arriba', arriba_mask)
+    #cv2.imshow('Capturando derecha', derecha_mask)
+
+    #Promedios para detección de mano
+    izquierda_mean = int(np.mean(izquierda_mask))
+    arriba_mean = int(np.mean(arriba_mask))
+    derecha_mean = int(np.mean(derecha_mask))
+    
+    #Umbrales de detección
+    if izquierda_mean > 50:
+        print("Izquierda")
+        keyboard.press('a')
+    else:
+        keyboard.release('a')
+    if arriba_mean > 50:
+        print("Arriba")
+        keyboard.press('w')
+    else:
+        keyboard.release('w')
+    if derecha_mean > 50:
+        print("Derecha")
+        keyboard.press('d')
+    else:
+        keyboard.release('d')
+    
 
     # Espera 100 milisegundos y espera a que el usuario presione la tecla 'q' para salir
     if cv2.waitKey(100) == ord('q'):
